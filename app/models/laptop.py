@@ -1,0 +1,48 @@
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from app.database import Base
+
+class Laptop(Base):
+    __tablename__ = 'laptops'
+    
+    id = Column(Integer,primary_key=True,index=True)
+    brand = Column(String, nullable=False)
+    model = Column(String, nullable=False)
+    price = Column(Integer, nullable=False)
+    ram = Column(String, nullable=False)
+    storage = Column(String, nullable=False)
+    usage_type = Column(String, nullable=False)
+    battery_life = Column(String, nullable=False)
+    processor = Column(String, nullable=False)
+    cpu = Column(String, nullable=False)
+    gpu = Column(String, nullable=False)
+    screensize = Column(String,nullable =False)
+    processor_gen = Column(String, nullable=False)
+    os = Column(String, nullable=False)
+    office = Column(String, nullable=False)
+    warranty = Column(String, nullable=False)
+    refresh_rate = Column(String, nullable=False)
+    weight_kg = Column(String, nullable=False)
+    ram_speed = Column(String, nullable=False)
+    storage_type = Column(String, nullable=False)
+    storage_size = Column(String, nullable=False)
+    screen_type = Column(String, nullable=False)
+    resolution = Column(String, nullable=False)
+    battery_life = Column(String, nullable=False)
+    usb_ports = Column(String, nullable=False)
+    hdmi_ports = Column(String, nullable=False)
+    thunderbolt_ports = Column(String, nullable=False)
+    audio_jack = Column(String, nullable=False)
+    lan_port = Column(String, nullable=False)
+    wifi = Column(String, nullable=False)
+    fanspeed = Column(String, nullable=False)
+    keyboard_light = Column(String, nullable=False)
+    webcam = Column(String, nullable=False)
+    webcam_resolution = Column(String, nullable=False)
+    microphone = Column(String, nullable=False)
+    speakers = Column(String, nullable=False)
+    color = Column(String, nullable=False)
+    launchdate = Column(String, nullable=False)
+    image_url = Column(String, nullable=False)
+    buy_link = Column(String, nullable=False)
