@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import review,auth,laptop
+from src.routes import review,auth,laptop
 import uvicorn
 
 
@@ -12,4 +12,4 @@ app.include_router(laptop.router,prefix = "/laptops")
 
 if __name__ == "__main__":
 
-    uvicorn.run(app, host="localhost", port = 8000)
+    uvicorn.run("src.main:app", host="localhost", port = 8000)

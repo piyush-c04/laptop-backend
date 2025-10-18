@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models import Laptop, Review
-from database import get_db
-from api_schemas.review import ReviewCreate, ReviewResponse
+from src.models import Laptop, Review
+from src.database import get_db
+from src.api_schemas.review import ReviewCreate, ReviewResponse
 
-router = APIRouter(prefix="/", tags=["Reviews"])
+router = APIRouter(tags=["Reviews"])
 
 @router.post("/{laptop_id}", response_model=ReviewResponse, status_code=status.HTTP_201_CREATED)
 def create_review(laptop_id: int, review: ReviewCreate, db: Session = Depends(get_db)):

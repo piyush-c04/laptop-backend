@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 import os
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models.user import User
+from src.database import get_db
+from src.models.User import User
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -53,9 +53,18 @@ def get_current_user(token: str = Depends(...), db: Session = Depends(get_db)):
 
     return user
 
-def require_role(required_role: str):
-    def role_dependency(current_user = Depends(get_current_user)):
-        if current_user.role != required_role:
-            raise HTTPException(status_code=403, detail="Not enough permissions")
-        return current_user
-    return role_dependency
+def require_role(role: str):
+    def dependency(current_user = Depends(get_current_user)):
+        if current_user.role != role:
+            raise HTTPException(status_code=403, detail="Forbidden")
+    return dependency
+
+def hash_password(password: str) -> str:
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+    return pwd_context.verify(plain_password, hashed_password)

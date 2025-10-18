@@ -1,8 +1,7 @@
-from ast import List
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+from pydantic import BaseModel
+from typing import Optional,List
 
-from app.api_schemas.review import ReviewResponse
+from src.api_schemas.review import ReviewResponse
 # ======================
 # LAPTOP SCHEMAS
 # ======================
@@ -47,6 +46,7 @@ class LaptopBase(BaseModel):
     image_url: str
     buy_link: str
 
+    
 class LaptopCreate(LaptopBase):
     pass
 
@@ -56,6 +56,7 @@ class LaptopUpdate(LaptopBase):
 class LaptopResponse(LaptopBase):
     id: int
     reviews: List[ReviewResponse] = []
+    avg_rating: Optional[str] = None
     
     class Config:
         orm_mode = True
