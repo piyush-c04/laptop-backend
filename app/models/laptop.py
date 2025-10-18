@@ -46,3 +46,5 @@ class Laptop(Base):
     launchdate = Column(String, nullable=False)
     image_url = Column(String, nullable=False)
     buy_link = Column(String, nullable=False)
+    
+    reviews = relationship("Review", back_populates="laptop", cascade="all, delete")

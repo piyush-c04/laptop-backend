@@ -1,5 +1,8 @@
+from ast import List
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+
+from app.api_schemas.review import ReviewResponse
 # ======================
 # LAPTOP SCHEMAS
 # ======================
@@ -52,6 +55,7 @@ class LaptopUpdate(LaptopBase):
 
 class LaptopResponse(LaptopBase):
     id: int
-
+    reviews: List[ReviewResponse] = []
+    
     class Config:
         orm_mode = True

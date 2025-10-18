@@ -14,3 +14,5 @@ class User(Base):
     date_created = Column(String, nullable=False,default='now()')
     is_active = Column(String, default='true', nullable=False)
     role = Column(String, default="user")
+    
+    reviews = relationship("Review", back_populates="user", cascade="all, delete")

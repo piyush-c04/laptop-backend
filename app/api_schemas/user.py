@@ -1,6 +1,7 @@
 # app/api_schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from api_schemas.review import ReviewResponse
 
 # ======================
 # USER SCHEMAS

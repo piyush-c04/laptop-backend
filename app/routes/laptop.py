@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models.laptop import Laptop
+from models.Laptop import Laptop
 from database import get_db
 from api_schemas import LaptopCreate
 from app.utils.security import require_role
