@@ -26,8 +26,9 @@ class UserResponse(UserBase):
     is_active: Optional[str] = "true"
     date_created: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 
 

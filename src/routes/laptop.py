@@ -6,15 +6,16 @@ from src.api_schemas.laptop import LaptopCreate, LaptopResponse
 from src.api_schemas.review import ReviewCreate, ReviewResponse
 from src.utils.security import require_role
 from sqlalchemy import func
+from typing import List
 
 router = APIRouter(tags=["Laptops"])
 
-@router.get("/laptops/",dependencies=[Depends(require_role("admin"))])
+@router.get("/",dependencies=[Depends(require_role("admin"))])
 def read_laptops(db: Session = Depends(get_db)):
     laptops = db.query(Laptop).all()
     return laptops
 
-@router.get("/laptops/")
+@router.get("/",response_model=LaptopResponse)
 def read_laptops(
     brand: str | None = None,
     min_price: float | None = None,
@@ -34,8 +35,8 @@ def read_laptops(
     return query.all()
 
 
-@router.get("/laptops/{laptop_id}")
-def read_laptop(laptop_id: int, db: Session = Depends(get_db)):
+@router.get("/{laptop_id}")
+def read_laptop(laptop_id: int, db: Session = Depends(get_db),response_model=LaptopResponse):
     laptop = db.query(Laptop).filter(Laptop.id == laptop_id).first()
     if not laptop:
         raise HTTPException(status_code=404, detail="Laptop not found")
@@ -46,7 +47,7 @@ def read_laptop(laptop_id: int, db: Session = Depends(get_db)):
 #only admins can create, update, delete laptops
 
 
-@router.post("/create/laptops", status_code=status.HTTP_201_CREATED,
+@router.post("/create", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(require_role("admin"))])
 def create_laptop(laptop: LaptopCreate, db: Session = Depends(get_db)):
     db.add(laptop)
@@ -54,7 +55,7 @@ def create_laptop(laptop: LaptopCreate, db: Session = Depends(get_db)):
     db.refresh(laptop)
     return {"message": "Laptop Created!", "data": laptop}
 
-@router.delete("/delete/laptops/{laptop_id}", status_code=status.HTTP_204_NO_CONTENT,dependencies=[Depends(require_role("admin"))])
+@router.delete("/delete/{laptop_id}", status_code=status.HTTP_204_NO_CONTENT,dependencies=[Depends(require_role("admin"))])
 def delete_laptop(laptop_id: int, db: Session = Depends(get_db)):
     laptop = db.query(Laptop).filter(Laptop.id == laptop_id).first()
     if not laptop:
@@ -64,7 +65,7 @@ def delete_laptop(laptop_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"Deleted Laptop ID": deleted_id}
 
-@router.put("/update/laptops/{laptop_id}",dependencies=[Depends(require_role("admin"))])
+@router.put("/update/{laptop_id}",dependencies=[Depends(require_role("admin"))])
 def update_laptop(laptop_id: int, laptop_data: LaptopCreate, db: Session = Depends(get_db)):
     laptop = db.query(Laptop).filter(Laptop.id == laptop_id).first()
     if not laptop:

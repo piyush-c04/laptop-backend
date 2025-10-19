@@ -1,4 +1,5 @@
 # utils/security.py
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
@@ -34,29 +35,28 @@ def logout_token(token: str)->None:
     blacklisted_tokens.add(token)
 
 
-def get_current_user(token: str = Depends(...), db: Session = Depends(get_db)):
-    from fastapi.security import OAuth2PasswordBearer
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-    token = oauth2_scheme()
+# Create OAuth2 scheme outside the function
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
         if email is None:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
     user = db.query(User).filter(User.email == email).first()
     if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+    
     return user
 
 def require_role(role: str):
     def dependency(current_user = Depends(get_current_user)):
         if current_user.role != role:
-            raise HTTPException(status_code=403, detail="Forbidden")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
     return dependency
 
 def hash_password(password: str) -> str:
