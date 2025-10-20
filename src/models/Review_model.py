@@ -7,7 +7,7 @@ class Review(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     laptop_id = Column(Integer, ForeignKey("laptops.id", ondelete="CASCADE"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  # ✅ REQUIRED
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     username = Column(String, nullable=False)
     rating = Column(Float, nullable=False)
     comment = Column(Text)

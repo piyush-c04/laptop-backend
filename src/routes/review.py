@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.models import Laptop, Review
+from src.models.Laptop_model import Laptop
+from src.models.Review_model import Review
 from src.database import get_db
 from src.api_schemas.review import ReviewCreate, ReviewResponse
 

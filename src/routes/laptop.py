@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.models.Laptop import Laptop
+from src.models.Laptop_model import Laptop
 from src.database import get_db
 from src.api_schemas.laptop import LaptopCreate, LaptopResponse
 from src.api_schemas.review import ReviewCreate, ReviewResponse
@@ -39,8 +39,8 @@ def read_laptops(db: Session = Depends(get_db)):
     laptops = db.query(Laptop).all()
     return laptops
 
-@router.get("/{laptop_id}")
-def read_laptop(laptop_id: int, db: Session = Depends(get_db),response_model=LaptopResponse):
+@router.get("/{laptop_id}",response_model=LaptopResponse)
+def read_laptop(laptop_id: int, db: Session = Depends(get_db)):
     laptop = db.query(Laptop).filter(Laptop.id == laptop_id).first()
     if not laptop:
         raise HTTPException(status_code=404, detail="Laptop not found")
@@ -54,7 +54,7 @@ def read_laptop(laptop_id: int, db: Session = Depends(get_db),response_model=Lap
 @router.post("/create", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(require_role("admin"))])
 def create_laptop(laptop: LaptopCreate, db: Session = Depends(get_db)):
-    db.add(laptop)
+    db.add(**laptop.model_dump())
     db.commit()
     db.refresh(laptop)
     return {"message": "Laptop Created!", "data": laptop}
@@ -75,10 +75,11 @@ def update_laptop(laptop_id: int, laptop_data: LaptopCreate, db: Session = Depen
     if not laptop:
         raise HTTPException(status_code=404, detail="Laptop not found")
     
-    for key, value in laptop_data.dict().items():
+    for key, value in laptop_data.model_dump().items():
         setattr(laptop, key, value)
     
     db.commit()
     db.refresh(laptop)
-    return {"Updated Laptop : ", laptop}
+    return {"updated_laptop": laptop}
+
 

@@ -1,12 +1,11 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from src.database import Base
 
 class Laptop(Base):
     __tablename__ = 'laptops'
     
-    id = Column(Integer,primary_key=True,index=True)
+    id = Column(Integer, primary_key=True, index=True)
     brand = Column(String, nullable=False)
     model = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
@@ -17,7 +16,7 @@ class Laptop(Base):
     processor = Column(String, nullable=False)
     cpu = Column(String, nullable=False)
     gpu = Column(String, nullable=False)
-    screensize = Column(String,nullable =False)
+    screensize = Column(String, nullable=False)
     processor_gen = Column(String, nullable=False)
     os = Column(String, nullable=False)
     office = Column(String, nullable=False)
@@ -29,7 +28,6 @@ class Laptop(Base):
     storage_size = Column(String, nullable=False)
     screen_type = Column(String, nullable=False)
     resolution = Column(String, nullable=False)
-    battery_life = Column(String, nullable=False)
     usb_ports = Column(String, nullable=False)
     hdmi_ports = Column(String, nullable=False)
     thunderbolt_ports = Column(String, nullable=False)
@@ -46,5 +44,5 @@ class Laptop(Base):
     launchdate = Column(String, nullable=False)
     image_url = Column(String, nullable=False)
     buy_link = Column(String, nullable=False)
-    
+
     reviews = relationship("Review", back_populates="laptop", cascade="all, delete")

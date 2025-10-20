@@ -7,7 +7,7 @@ import os
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from src.database import get_db
-from src.models.User import User
+from src.models.User_model import User
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"

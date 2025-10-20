@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.models import User
+from src.models.User_model import User
 from src.database import get_db
 from src.utils.security import hash_password, verify_password
 from src.api_schemas.user import UserCreate
@@ -54,7 +54,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {"name": new_user.name, "email": new_user.email}
+    return {"name": new_user.first_name, "email": new_user.email}
 
 blacklisted_tokens = set()  # you can replace this with Redis or DB
 
