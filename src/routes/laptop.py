@@ -10,12 +10,8 @@ from typing import List
 
 router = APIRouter(tags=["Laptops"])
 
-@router.get("/",dependencies=[Depends(require_role("admin"))])
-def read_laptops(db: Session = Depends(get_db)):
-    laptops = db.query(Laptop).all()
-    return laptops
 
-@router.get("/",response_model=LaptopResponse)
+@router.get("/", response_model=List[LaptopResponse])
 def read_laptops(
     brand: str | None = None,
     min_price: float | None = None,
@@ -24,6 +20,7 @@ def read_laptops(
     db: Session = Depends(get_db)
 ):
     query = db.query(Laptop)
+
     if brand:
         query = query.filter(Laptop.brand == brand)
     if min_price:
@@ -32,8 +29,15 @@ def read_laptops(
         query = query.filter(Laptop.price <= max_price)
     if sort_by:
         query = query.order_by(getattr(Laptop, sort_by))
-    return query.all()
 
+    laptops = query.all()  # ✅ fetch results at the end
+    return laptops
+
+
+@router.get("/",dependencies=[Depends(require_role("admin"))])
+def read_laptops(db: Session = Depends(get_db)):
+    laptops = db.query(Laptop).all()
+    return laptops
 
 @router.get("/{laptop_id}")
 def read_laptop(laptop_id: int, db: Session = Depends(get_db),response_model=LaptopResponse):

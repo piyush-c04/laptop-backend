@@ -6,7 +6,8 @@ class Review(Base):
     __tablename__ = "reviews"
 
     id = Column(Integer, primary_key=True, index=True)
-    laptop_id = Column(Integer, ForeignKey("laptops.id", ondelete="CASCADE"))
+    laptop_id = Column(Integer, ForeignKey("laptops.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  # ✅ REQUIRED
     username = Column(String, nullable=False)
     rating = Column(Float, nullable=False)
     comment = Column(Text)
